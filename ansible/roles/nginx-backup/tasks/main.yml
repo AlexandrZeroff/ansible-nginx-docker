@@ -1,0 +1,28 @@
+---
+# run backup script and fetch zip from host
+
+- name: Install zip via apt 
+  apt:
+    name: zip
+    state: present
+
+- name: Create backup directory if not exists
+  file:
+    path: "{{ nginx_output_directory }}"
+    state: directory
+    mode: 0755
+    recurse: yes
+    
+- name: Run backup script
+  script:
+    cmd: "./files/html_backup.sh -d {{ nginx_data_directory }} -i {{ nginx_index_file }} -o {{ nginx_output_directory }}"
+    
+- name: Fetch backup from remote host to local
+  synchronize:  
+    src={{ item }} 
+    dest="backups/{{ ansible_hostname }}/" 
+    mode=pull
+  with_items:
+    - "{{ nginx_output_directory }}/"
+
+  

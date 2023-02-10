@@ -1,0 +1,75 @@
+---
+  # run backup script and fetch zip from nginx hosts
+- name: Backup nginx html files
+  hosts: clean_nodes
+  gather_facts: True
+  become: yes
+  become_user: root
+  vars:
+    - nginx_data_directory: /var/www/nginx         # server root
+    - nginx_index_file: index.html                 # html file
+    - nginx_output_directory: "{{ nginx_data_directory }}/backups"   # backups directory
+  tasks:
+  - name: Install zip via apt 
+    apt:
+      name: zip
+      state: present
+
+  - name: Create backup directory if not exists
+    file:
+      path: "{{ nginx_output_directory }}"
+      state: directory
+      mode: 0755
+      recurse: yes
+    
+  - name: Run backup script
+    script:
+      cmd: "./backups/html_backup.sh -d {{ nginx_data_directory }} -i {{ nginx_index_file }} -o {{ nginx_output_directory }}"
+    
+  - name: Fetch backup from remote host to local
+    synchronize:  
+      src={{ item }} 
+      dest="backups/{{ ansible_hostname }}/" 
+      mode=pull
+    with_items:
+      - "{{ nginx_output_directory }}/"
+    
+    
+# run backup script and fetch backup zip from nginx container volumes
+- name: Backup nginx html files from docker containers
+  hosts: docker_nodes
+  gather_facts: True
+  become: yes
+  become_user: root
+  vars:
+    - nginx_docker_data_directory: /tmp/nginx      # server root
+    - nginx_docker_index_file: index.html          # html file
+    - nginx_docker_output_directory: "{{ nginx_docker_data_directory }}/backups"   # backups directory
+  tasks:
+  - name: Install zip via apt 
+    apt:
+      name: zip
+      state: present
+
+  - name: Create backup directory if not exists
+    file:
+      path: "{{ nginx_docker_output_directory }}"
+      state: directory
+      mode: 0755
+      recurse: yes
+    
+  - name: Run backup script
+    script:
+      cmd: "./backups/html_backup.sh -d {{ nginx_docker_data_directory }} -i {{ nginx_docker_index_file }} -o {{ nginx_docker_output_directory }}"
+    
+  - name: Fetch backup from remote host to local
+    synchronize:  
+      src={{ item }} 
+      dest="backups/{{ ansible_hostname }}/" 
+      mode=pull
+    with_items:
+      - "{{ nginx_docker_output_directory }}/"
+   
+
+
+

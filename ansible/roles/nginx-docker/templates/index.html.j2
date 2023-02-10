@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+
+    <title>Nginx on {{ ansible_hostname }}</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300|Sonsie+One"
+      rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body style="height: 100vh; display: flex; flex-direction: column; align-items: center">
+
+    <header style="height: 100px; text-align: center">
+      <h1>Nginx server on {{ ansible_hostname }}</h1>
+    </header>
+    <main>
+      <div style="height: 100%; text-align: center">
+      	<h3>Web-server IP-address is {{ ansible_enp0s8.ipv4.address }}</h3>
+      </div>
+      
+    </main>
+  </body>
+</html>

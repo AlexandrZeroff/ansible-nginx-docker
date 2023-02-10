@@ -1,0 +1,10 @@
+---
+- hosts: nodes
+  become: true
+  gather_facts: True
+
+  tasks:
+    - name: ping all nodes
+      ansible.builtin.ping:
+
+        

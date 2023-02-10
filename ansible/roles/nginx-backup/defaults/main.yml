@@ -1,0 +1,10 @@
+---
+# defaults file for nginx data backup
+
+nginx_data_directory: /var/www/nginx
+nginx_index_file: index.html
+nginx_output_directory: "{{ nginx_data_directory }}/backups"
+
+nginx_docker_data_directory: /tmp/nginx
+nginx_docker_index_file: index.html
+nginx_docker_ouput_directory: "{{ nginx_docker_data_directory }}/backups"

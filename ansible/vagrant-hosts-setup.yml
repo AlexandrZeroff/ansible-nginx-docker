@@ -1,0 +1,20 @@
+---
+- name: Basic setup and nginx installation
+  hosts: clean_nodes
+  gather_facts: True
+  become: yes
+  become_user: root
+  roles:
+   - basic-setup
+   - clear-nginx
+    
+    
+- name: Basic setup, docker engine install and nginx
+  hosts: docker_nodes
+  gather_facts: True
+  become: yes
+  roles:
+    - basic-setup
+    - docker-install
+    - nginx-docker
+    

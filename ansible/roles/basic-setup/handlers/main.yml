@@ -1,0 +1,9 @@
+---
+# handlers for basic-config
+# restart crond service
+
+- name: Restart crond service
+  ansible.builtin.systemd:
+    state: restarted
+    daemon_reload: yes
+    name: crond

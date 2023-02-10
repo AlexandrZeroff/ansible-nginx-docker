@@ -1,0 +1,5 @@
+---
+# defaults file for docker-install
+
+remote_vm_user: vagrant
+docker_group: docker

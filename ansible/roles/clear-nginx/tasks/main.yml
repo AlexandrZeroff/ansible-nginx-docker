@@ -1,0 +1,48 @@
+---
+# tasks file for clear-nginx
+- name: Update and upgrade apt
+  ansible.builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600
+    upgrade: yes
+ 
+- name: "Install Nginx of latest version 1.23.x"
+  ansible.builtin.apt:
+    name: ['nginx']
+    state: present
+ 
+- name: Copy nginx config to VM
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/sites-available/default
+    
+- name: Create config link
+  file:
+    dest: /etc/nginx/sites-enabled/default
+    src: /etc/nginx/sites-available/default
+    state: link
+ 
+- name: Create Nginx directory
+  ansible.builtin.file:
+    path: "{{ nginx_directory }}"
+    state: directory
+ 
+- name: Convert j2 template to custom index.html
+  template:
+    src: index.html.j2
+    dest: "{{ nginx_directory }}/index.html"
+    owner: vagrant
+    group: vagrant
+    mode: 0777
+  notify: Restart nginx service
+
+- name: Check nginx service status
+  shell: systemctl status nginx
+  ignore_errors: true
+  register: nginx_status
+
+- name: Nginx status
+  debug: 
+    var: nginx_status.stdout_lines
+  
+  

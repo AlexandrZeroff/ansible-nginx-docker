@@ -1,0 +1,4 @@
+---
+# variables for clear-nginx installation
+
+nginx_directory: /var/www/nginx

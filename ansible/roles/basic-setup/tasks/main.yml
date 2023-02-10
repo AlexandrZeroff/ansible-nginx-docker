@@ -1,0 +1,27 @@
+---
+# includes:
+# system update & upgrade
+# sets timezone GMT+02:00 Europe/Kiev
+
+- name: Update and upgrade apt
+  ansible.builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600
+    upgrade: yes
+        
+#- name: Update Timezone to Etc/UTC
+#  copy: 
+#    content="Europe/Kyiv\n" 
+#    dest=/etc/timezone 
+#    owner=root 
+#    group=root 
+#    mode=0644
+#  register: timezone
+
+#- name: Reconfigure Timezone Data 
+#  shell: dpkg-reconfigure -f noninteractive tzdata
+#  when: timezone.changed
+
+- name: Set timezone to Europe/Kiev
+  community.general.timezone:
+    name: Europe/Kiev

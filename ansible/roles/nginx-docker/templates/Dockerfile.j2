@@ -1,0 +1,13 @@
+# Create custom nginx container
+FROM nginx:latest
+
+RUN echo "daemon off;" >> /etc/nginx/nginx.conf
+
+COPY nginx.conf /etc/nginx/sites-available/default
+COPY index.html {{ nginx_directory }}/index.html
+
+VOLUME config /etc/nginx/sites-available
+VOLUME data {{ nginx_directory }}
+
+EXPOSE 80
+CMD ["nginx"]
